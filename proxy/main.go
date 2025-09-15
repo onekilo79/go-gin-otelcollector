@@ -4,21 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	_ "github.com/mcarr-and/go-gin-otelcollector/proxy-service/api"
-	"github.com/mcarr-and/go-gin-otelcollector/proxy-service/model"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/rs/zerolog"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
-	"go.opentelemetry.io/otel/propagation"
-	"go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/otel/semconv/v1.17.0"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 	"io"
 	"net/http"
 	"os"
@@ -29,11 +14,25 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mcarr-and/go-gin-otelcollector/proxy-service/model"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/zerolog"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
 	"go.opentelemetry.io/otel/trace"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 type OtelHttpClient interface {
@@ -55,6 +54,7 @@ func init() {
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 // @host      localhost:9070
 // @BasePath /
+// @schemes http
 
 // GetAlbums godoc
 // @Summary Get all Albums
@@ -65,26 +65,28 @@ func init() {
 // @Success 200 {array} model.Album
 // @Failure 500 {object} model.ServerError
 // @Router /albums [get]
-func getAlbums(c *gin.Context) {
-	span := trace.SpanFromContext(c.Request.Context())
-	span.SetName("/albums GET")
-	defer span.End()
-	// proxy call to album-Store
-	resp, err := Get(c.Request.Context(), albumStoreURL+"/albums")
-	setResponseCodeIfPresent(resp, span)
-	if handleResponseHasError(c, err, "getAlbums", span) {
-		return
+func makeGetAlbumsHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		span := trace.SpanFromContext(c.Request.Context())
+		span.SetName("/albums GET")
+		defer span.End()
+		// proxy call to album-Store
+		resp, err := Get(c.Request.Context(), albumStoreURL+"/albums")
+		setResponseCodeIfPresent(resp, span)
+		if handleResponseHasError(c, err, "getAlbums", span) {
+			return
+		}
+		albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
+		if failed {
+			return
+		}
+		if handleResponseCodeHasError(c, resp.StatusCode, "getAlbums", span) {
+			return
+		}
+		span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusOK))
+		span.SetStatus(codes.Ok, "")
+		c.JSON(http.StatusOK, albumStoreResponseBodyJson)
 	}
-	albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
-	if failed {
-		return
-	}
-	if handleResponseCodeHasError(c, resp.StatusCode, "getAlbums", span) {
-		return
-	}
-	span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusOK))
-	span.SetStatus(codes.Ok, "")
-	c.JSON(http.StatusOK, albumStoreResponseBodyJson)
 }
 
 // GetAlbumById godoc
@@ -98,33 +100,35 @@ func getAlbums(c *gin.Context) {
 // @Failure 400 {object} model.ServerError
 // @Failure 500 {object} model.ServerError
 // @Router /albums/{id} [get]
-func getAlbumByID(c *gin.Context) {
-	span := trace.SpanFromContext(c.Request.Context())
-	span.SetName("/albums/:id GET")
-	defer span.End()
-	id := c.Param("id")
-	span.SetAttributes(attribute.Key("proxy-service.request.parameters").String(fmt.Sprintf("%s=%s", "ID", id)))
-	albumID, err := strconv.Atoi(id)
-	// param ID is expected to be a number so fail if cannot covert to integer
-	if buildErrorInvalidRequestParameters(c, err, id, span) {
-		return
+func makeGetAlbumByIdHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		span := trace.SpanFromContext(c.Request.Context())
+		span.SetName("/albums/:id GET")
+		defer span.End()
+		id := c.Param("id")
+		span.SetAttributes(attribute.Key("proxy-service.request.parameters").String(fmt.Sprintf("%s=%s", "ID", id)))
+		albumID, err := strconv.Atoi(id)
+		// param ID is expected to be a number so fail if cannot covert to integer
+		if buildErrorInvalidRequestParameters(c, err, id, span) {
+			return
+		}
+		// proxy call to album-Store
+		resp, err := Get(c.Request.Context(), fmt.Sprintf("%v/albums/%v", albumStoreURL, albumID))
+		setResponseCodeIfPresent(resp, span)
+		if handleResponseHasError(c, err, "getAlbumById", span) {
+			return
+		}
+		albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
+		if failed {
+			return
+		}
+		if handleResponseCodeHasError(c, resp.StatusCode, "getAlbumById", span) {
+			return
+		}
+		span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusOK))
+		span.SetStatus(codes.Ok, "")
+		c.JSON(http.StatusOK, albumStoreResponseBodyJson)
 	}
-	// proxy call to album-Store
-	resp, err := Get(c.Request.Context(), fmt.Sprintf("%v/albums/%v", albumStoreURL, albumID))
-	setResponseCodeIfPresent(resp, span)
-	if handleResponseHasError(c, err, "getAlbumById", span) {
-		return
-	}
-	albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
-	if failed {
-		return
-	}
-	if handleResponseCodeHasError(c, resp.StatusCode, "getAlbumById", span) {
-		return
-	}
-	span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusOK))
-	span.SetStatus(codes.Ok, "")
-	c.JSON(http.StatusOK, albumStoreResponseBodyJson)
 }
 
 // PostAlbum godoc
@@ -139,30 +143,32 @@ func getAlbumByID(c *gin.Context) {
 // @Failure 400 {object} model.ServerError
 // @Failure 500 {object} model.ServerError
 // @Router /albums [post]
-func postAlbum(c *gin.Context) {
-	span := trace.SpanFromContext(c.Request.Context())
-	span.SetName("/albums POST")
-	defer span.End()
-	requestBodyString, failed := processRequestBody(c, span, c.Request.Body)
-	if failed {
-		return
+func makePostAlbumsHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		span := trace.SpanFromContext(c.Request.Context())
+		span.SetName("/albums POST")
+		defer span.End()
+		requestBodyString, failed := processRequestBody(c, span, c.Request.Body)
+		if failed {
+			return
+		}
+		// proxy call to album-Store
+		resp, err := Post(c.Request.Context(), albumStoreURL+"/albums", "application/json", strings.NewReader(fmt.Sprintf("%v", requestBodyString)))
+		setResponseCodeIfPresent(resp, span)
+		if handleResponseHasError(c, err, "postAlbum", span) {
+			return
+		}
+		albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
+		if failed {
+			return
+		}
+		if handleResponseCodeHasError(c, resp.StatusCode, "postAlbum", span) {
+			return
+		}
+		span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusCreated))
+		span.SetStatus(codes.Ok, "")
+		c.JSON(http.StatusCreated, albumStoreResponseBodyJson)
 	}
-	// proxy call to album-Store
-	resp, err := Post(c.Request.Context(), albumStoreURL+"/albums", "application/json", strings.NewReader(fmt.Sprintf("%v", requestBodyString)))
-	setResponseCodeIfPresent(resp, span)
-	if handleResponseHasError(c, err, "postAlbum", span) {
-		return
-	}
-	albumStoreResponseBodyJson, failed := processResponseBody(c, span, resp.Body)
-	if failed {
-		return
-	}
-	if handleResponseCodeHasError(c, resp.StatusCode, "postAlbum", span) {
-		return
-	}
-	span.SetAttributes(attribute.Key("proxy-service.response.code").Int(http.StatusCreated))
-	span.SetStatus(codes.Ok, "")
-	c.JSON(http.StatusCreated, albumStoreResponseBodyJson)
 }
 
 func setResponseCodeIfPresent(resp *http.Response, span trace.Span) {
@@ -179,12 +185,14 @@ func setResponseCodeIfPresent(resp *http.Response, span trace.Span) {
 // @Produce json
 // @Success 200 {string} status
 // @Router /status [get]
-func status(c *gin.Context) {
-	span := trace.SpanFromContext(c.Request.Context())
-	span.SetName("/status")
-	span.SetStatus(codes.Ok, "")
-	defer span.End()
-	c.JSON(http.StatusOK, gin.H{"status": "OK"})
+func makeStatusHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		span := trace.SpanFromContext(c.Request.Context())
+		span.SetName("/status")
+		span.SetStatus(codes.Ok, "")
+		defer span.End()
+		c.JSON(http.StatusOK, gin.H{"status": "OK"})
+	}
 }
 
 // Metrics godoc
@@ -195,19 +203,23 @@ func status(c *gin.Context) {
 // @Produce plain
 // @Success 200 {string} metrics
 // @Router /status [get]
-func metrics(c *gin.Context) {
-	span := trace.SpanFromContext(c.Request.Context())
-	span.SetName("/metrics")
-	span.SetStatus(codes.Ok, "")
-	defer span.End()
-	promhttp.Handler().ServeHTTP(c.Writer, c.Request)
+func makeMetricsHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		span := trace.SpanFromContext(c.Request.Context())
+		span.SetName("/metrics")
+		span.SetStatus(codes.Ok, "")
+		defer span.End()
+		promhttp.Handler().ServeHTTP(c.Writer, c.Request)
+	}
 }
 
 func processResponseBody(c *gin.Context, span trace.Span, body io.ReadCloser) (interface{}, bool) {
 	var jsonBody interface{}
-	byteArray, err := io.ReadAll(body)
+	byteArray, _ := io.ReadAll(body)
 	jsonBodyString := string(byteArray[:])
-	if err = json.NewDecoder(strings.NewReader(jsonBodyString)).Decode(&jsonBody); err != nil {
+	var err = json.NewDecoder(strings.NewReader(jsonBodyString)).Decode(&jsonBody)
+
+	if err != nil {
 		buildMalformedResponseJsonErrorResponse(c, span, jsonBodyString, "error from album-store Malformed JSON returned", http.StatusInternalServerError)
 		return jsonBody, true
 	}
@@ -228,9 +240,9 @@ func processResponseBody(c *gin.Context, span trace.Span, body io.ReadCloser) (i
 
 func processRequestBody(c *gin.Context, span trace.Span, reader io.ReadCloser) (string, bool) {
 	var requestBody interface{}
-	byteArray, err := io.ReadAll(reader)
+	byteArray, _ := io.ReadAll(reader)
 	jsonBodyString := string(byteArray[:])
-	err = json.NewDecoder(strings.NewReader(jsonBodyString)).Decode(&requestBody)
+	var err = json.NewDecoder(strings.NewReader(jsonBodyString)).Decode(&requestBody)
 	span.SetAttributes(attribute.Key("proxy-service.request.body").String(jsonBodyString))
 
 	if err != nil {
@@ -303,11 +315,11 @@ func setupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(otelgin.Middleware(serviceName)) // add OpenTelemetry to Gin
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.GET("/albums", getAlbums)
-	router.GET("/albums/:id", getAlbumByID)
-	router.POST("/albums", postAlbum)
-	router.GET("/status", status)
-	router.GET("/metrics", metrics)
+	router.GET("/albums", makeGetAlbumsHandler())
+	router.GET("/albums/:id", makeGetAlbumByIdHandler())
+	router.POST("/albums", makePostAlbumsHandler())
+	router.GET("/status", makeStatusHandler())
+	router.GET("/metrics", makeMetricsHandler())
 	return router
 }
 
@@ -343,15 +355,15 @@ func main() {
 		Handler: h2c.NewHandler(router, &http2.Server{}),
 	}
 
-	quit := make(chan os.Signal)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			proxyLog.Err(err)
 		}
 	}()
-	<-quit
+	<-sigChan
 
 	logInfo.Info().Msg("Server shutdown with 500ms timeout...")
 	ctxServer, cancel := context.WithTimeout(context.Background(), 500*time.Millisecond)
@@ -375,7 +387,7 @@ func main() {
 // this is to allow use of interface for httpClient and be able to mock out responses
 
 func Get(ctx context.Context, targetURL string) (resp *http.Response, err error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", targetURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, targetURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -384,7 +396,7 @@ func Get(ctx context.Context, targetURL string) (resp *http.Response, err error)
 
 // Post is a convenient replacement for http.Post that adds a span around the request.
 func Post(ctx context.Context, targetURL, contentType string, body io.Reader) (resp *http.Response, err error) {
-	req, err := http.NewRequestWithContext(ctx, "POST", targetURL, body)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, targetURL, body)
 	if err != nil {
 		return nil, err
 	}

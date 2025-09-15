@@ -4,6 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
@@ -12,11 +19,6 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/sdk/trace/tracetest"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"testing"
 )
 
 // inspired by this for setting up gin & otel to test spans
@@ -105,7 +107,7 @@ func Test_getAllAlbums_Success(t *testing.T) {
 
 func Test_getAllAlbums_Failure_Album_Returns_Error(t *testing.T) {
 	testRecorder, spanRecorder, router := setupTestRouter()
-	DefaultClient = &MockClient{}
+	// test client setup not needed
 
 	//inject in failure message to respond with that we could not get to the album-store
 	MockResponseFunc = func(*http.Request) (*http.Response, error) {
