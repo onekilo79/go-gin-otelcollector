@@ -9,7 +9,7 @@ This uses the opentelemetry instrumented http client [otelhttp](https://github.c
 
 The proxy-service has implemented some of the OpenTelemetry DefaultClient functions to allow a stub to be injected and return canned data. 
 
-### Inspierd by 
+### Inspired by 
 
 inspired by this for setting up gin & otel to test spans
 
@@ -24,9 +24,9 @@ The tests for the proxy-service use a stub service to send canned data back to t
 
 This allows the proxy service to be tested in isolation without needing to fire up both services. 
 
-This is done by exposing the OpenTelemetry DefaulClient which does http requests and overriding it as needed in the tests.
+This is done by exposing the OpenTelemetry DefaulClient which does http requests and injecting the stub in to respond to test Http calls.
 
-Not all tests need to override the DefaultClient behaviour so it is not done in the setup method
+Not all tests need to override the DefaultClient behaviour so it is not done in the setup method.
 
 
 
