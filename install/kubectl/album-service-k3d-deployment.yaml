@@ -4,8 +4,8 @@ items:
   - apiVersion: v1
     kind: Service
     metadata:
-      namespace: "album-store"
-      name: "album-store"
+      namespace: "album-service"
+      name: "album-service"
       annotations:
         prometheus.io/probe: "true"
         prometheus.io/probe-path: /status
@@ -13,8 +13,8 @@ items:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "9080"
       labels:
-        app.kubernetes.io/instance: "album-store"
-        app.kubernetes.io/name: "album-store"
+        app.kubernetes.io/instance: "album-service"
+        app.kubernetes.io/name: "album-service"
         app.kubernetes.io/version: "0.1.0"
     spec:
       internalTrafficPolicy: Cluster
@@ -27,8 +27,8 @@ items:
           port: 9080
           targetPort: 9080
       selector:
-        app.kubernetes.io/instance: "album-store"
-        app.kubernetes.io/name: "album-store"
+        app.kubernetes.io/instance: "album-service"
+        app.kubernetes.io/name: "album-service"
         app.kubernetes.io/version: "0.1.0"
       sessionAffinity: None
       type: ClusterIP
@@ -40,18 +40,18 @@ items:
     kind: Deployment
     metadata:
       labels:
-        app.kubernetes.io/name: "album-store"
-        app.kubernetes.io/instance: "album-store"
+        app.kubernetes.io/name: "album-service"
+        app.kubernetes.io/instance: "album-service"
         app.kubernetes.io/version: "0.1.0"
-      name: "album-store"
-      namespace: "album-store"
+      name: "album-service"
+      namespace: "album-service"
     spec:
       replicas: 3
       selector:
         matchLabels:
-          app.kubernetes.io/component: "album-store"
-          app.kubernetes.io/instance: "album-store"
-          app.kubernetes.io/name: "album-store"
+          app.kubernetes.io/component: "album-service"
+          app.kubernetes.io/instance: "album-service"
+          app.kubernetes.io/name: "album-service"
           app.kubernetes.io/version: "0.1.0"
       strategy:
         rollingUpdate:
@@ -61,14 +61,14 @@ items:
       template:
         metadata:
           labels:
-            app.kubernetes.io/component: "album-store"
-            app.kubernetes.io/instance: "album-store"
-            app.kubernetes.io/name: "album-store"
+            app.kubernetes.io/component: "album-service"
+            app.kubernetes.io/instance: "album-service"
+            app.kubernetes.io/name: "album-service"
             app.kubernetes.io/version: "0.1.0"
         spec:
           containers:
-            - name: "album-store"
-              image: registry.local:54094/album-store:0.2.2 # use the cluster internal name to reference registry
+            - name: "album-service"
+              image: registry.local:54094/album-service:0.2.2 # use the cluster internal name to reference registry
               imagePullPolicy: Always
               env:
                 - name: INSTANCE_NAME
@@ -112,17 +112,17 @@ items:
   - apiVersion: networking.istio.io/v1beta1
     kind: VirtualService
     metadata:
-      name: album-store-virtual-service
-      namespace: album-store
+      name: album-service-virtual-service
+      namespace: album-service
     spec:
       gateways:
-        - album-store-gateway
+        - album-service-gateway
       hosts:
-        - album-store.local
+        - album-service.local
       http:
         - route:
             - destination:
-                host: album-store
+                host: album-service
                 port:
                   number: 9080
 ---
@@ -132,16 +132,16 @@ items:
   - apiVersion: networking.istio.io/v1beta1
     kind: Gateway
     metadata:
-      name: album-store-gateway
-      namespace: album-store
+      name: album-service-gateway
+      namespace: album-service
     spec:
       selector:
         istio: ingressgateway
       servers:
         - hosts:
-            - album-store.local
+            - album-service.local
           port:
-            name: http-album-store
+            name: http-album-service
             number: 80
             protocol: HTTP
 ---
@@ -151,10 +151,10 @@ items:
   - apiVersion: networking.istio.io/v1beta1
     kind: DestinationRule
     metadata:
-      name: album-store-destination-rule
-      namespace: album-store
+      name: album-service-destination-rule
+      namespace: album-service
     spec:
-      host: album-store
+      host: album-service
       trafficPolicy:
         tls:
           mode: DISABLE
@@ -165,11 +165,11 @@ items:
   - apiVersion: autoscaling/v2
     kind: HorizontalPodAutoscaler
     metadata:
-      name: album-store
-      namespace: album-store
+      name: album-service
+      namespace: album-service
       labels:
-        app.kubernetes.io/instance: album-store
-        app.kubernetes.io/name: album-store
+        app.kubernetes.io/instance: album-service
+        app.kubernetes.io/name: album-service
         app.kubernetes.io/version: 0.2.2
     spec:
       maxReplicas: 5
@@ -184,4 +184,4 @@ items:
       scaleTargetRef:
         apiVersion: apps/v1
         kind: Deployment
-        name: album-store
+        name: album-service

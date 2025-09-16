@@ -9,5 +9,5 @@ profiles:
     deploy:
       kubectl:
         manifests:
-          - install/album-store-k3d-deployment.yaml
+          - install/album-service-k3d-deployment.yaml
           - install/proxy-service-k3d-deployment.yaml

@@ -103,7 +103,7 @@
           "datasource": "jaeger",
           "queryType": "search",
           "refId": "A",
-          "service": "album-store"
+          "service": "album-service"
         }
       ],
       "title": "Panel Title",
@@ -162,7 +162,7 @@
           "key": "Q-e001d482-3f02-4670-b1d8-fba33bce1800-0",
           "queryType": "search",
           "refId": "A",
-          "service": "album-store"
+          "service": "album-service"
         }
       ],
       "title": "Traces",
@@ -173,7 +173,7 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": ["album-store", "go", "applications"],
+  "tags": ["album-service", "go", "applications"],
   "templating": {
     "list": []
   },
@@ -183,7 +183,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "album-store",
+  "title": "album-service",
   "uid": "BxIPkssVz",
   "version": 3,
   "weekStart": ""

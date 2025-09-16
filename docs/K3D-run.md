@@ -23,7 +23,7 @@ Extra Documentation for K3D.
 
 local changes to your `/etc/hosts` to use nginx-ingress with the k3d cluster.
 
-```127.0.0.1	localhost k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local kiali.local album-store.local proxy-serivce.local```
+```127.0.0.1	localhost k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local kiali.local album-service.local proxy-serivce.local```
 
 ## 1. Create K3d Kubernetes Cluster with Internal Registry
 
@@ -49,9 +49,9 @@ local changes to your `/etc/hosts` to use nginx-ingress with the k3d cluster.
 
 **Note:**
 
-The album-store will not start after printing its version number if OpenTelemetry-collector cannot be reached.
+The album-service will not start after printing its version number if OpenTelemetry-collector cannot be reached.
 
-This will mean the liveness probe will fail and the album-store will eventually be in a CrashLoopBackoff state when you get pods.
+This will mean the liveness probe will fail and the album-service will eventually be in a CrashLoopBackoff state when you get pods.
 
 
 ## 4. Run Some Tests
@@ -59,7 +59,7 @@ This will mean the liveness probe will fail and the album-store will eventually 
 ### 4.1 curl
 
 ```bash
-curl --insecure --location 'http://album-store.local:8070/albums/'; 
+curl --insecure --location 'http://album-service.local:8070/albums/'; 
 ```
 
 ### 4.3 Run Test Suite
@@ -73,13 +73,13 @@ make k3d-test;
 [Postman files](../test/.)
 
 1. Import the folder `../test`
-1. Set Environment to `album-store.local`
-1. Open a test in the `Album-Store` collection and run it.
+1. Set Environment to `album-service.local`
+1. Open a test in the `album-service` collection and run it.
 
 ## 5. View the events in the different Services in K3D`
 
 Services:
-* [Jaeger to see Observability spans](http://jaeger.local:8070/search?limit=20&service=album-store)
+* [Jaeger to see Observability spans](http://jaeger.local:8070/search?limit=20&service=album-service)
 * [Prometheus for metrics](http://prometheus.local:8070)
 * [Grafana for dashboards](http://grafana.local:8070)
 * [Kubernetes dashboard for visualising the cluster](http://k-dashboard.local:8070)
@@ -87,7 +87,7 @@ Services:
   * generate token `kubectl -n istio-system create token kiali;`
 
 Applications:
-* [Album Store](http://album-store.local:8070)
+* [Album Store](http://album-service.local:8070)
 * [Proxy Service](http://proxy-service.local:8070)
 
 ## 6. Uninstall from cluster: Applications, Observability tooling, Monitoring tooling.  

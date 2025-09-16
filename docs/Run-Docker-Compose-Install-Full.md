@@ -29,11 +29,11 @@ This version everything is running inside the docker-compose.
 
 1. Import the collection and environment into your postman
 1. Set Environment to `localhost`
-1. Open a test in the `Album-Store` collection and run it.
+1. Open a test in the `album-service` collection and run it.
 
 ## 3. View the events in the different Services
 
-[View Jaeger](http://localhost:16696/search?limit=20&service=album-store)
+[View Jaeger](http://localhost:16696/search?limit=20&service=album-service)
 
 [View Prometheus](http://localhost:9090/graph?g0.expr=%7Bjob%3D~%22.%2B%22%7D%20&g0.tab=0&g0.stacked=0&g0.show_exemplars=0&g0.range_input=1h)
 

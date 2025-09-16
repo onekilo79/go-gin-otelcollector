@@ -1,8 +1,8 @@
-# album-store
+# album-service
 
 ![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
-Chart for Album-Store go application
+Chart for album-service go application
 
 ## Values
 
@@ -19,14 +19,14 @@ Chart for Album-Store go application
 | deployment.labels."sidecar.istio.io/inject" | string | `"true"` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"registry.local:54094/album-store"` |  |
+| image.repository | string | `"registry.local:54094/album-service"` |  |
 | image.tag | string | `"0.1.0"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.tls | list | `[]` |  |
 | istio.enabled | bool | `true` |  |
 | istio.gatewayPort | int | `80` |  |
-| istio.host | string | `"album-store.local"` |  |
+| istio.host | string | `"album-service.local"` |  |
 | istio.portNumber | int | `9080` |  |
 | istio.protocol | string | `"HTTP"` |  |
 | istio.tlsMode | string | `"DISABLE"` |  |

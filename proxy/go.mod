@@ -94,4 +94,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-//replace example.com/album-store/otelGinSetup => ../otelGinSetup
+//replace example.com/album-service/otelGinSetup => ../otelGinSetup

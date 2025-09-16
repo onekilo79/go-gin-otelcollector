@@ -8,7 +8,7 @@
 # files
 .DS_Store
 coverage*
-album-store
+album-service
 .gitignore
 Makefile
 .dockerignore

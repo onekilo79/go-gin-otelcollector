@@ -13,8 +13,8 @@ import (
 	"syscall"
 	"time"
 
-	_ "github.com/mcarr-and/go-gin-otelcollector/album-store/api"
-	"github.com/mcarr-and/go-gin-otelcollector/album-store/model"
+	_ "github.com/mcarr-and/go-gin-otelcollector/album-service/api"
+	"github.com/mcarr-and/go-gin-otelcollector/album-service/model"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
 	swaggerFiles "github.com/swaggo/files"
@@ -59,7 +59,7 @@ func makeGetAlbumsHandler(repo AlbumRepository) gin.HandlerFunc {
 		span.SetName("/albums GET")
 		defer span.End()
 		span.SetStatus(codes.Ok, "")
-		span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusOK))
+		span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusOK))
 		c.JSON(http.StatusOK, repo.List())
 	}
 }
@@ -81,7 +81,7 @@ func makeGetAlbumByIDHandler(repo AlbumRepository) gin.HandlerFunc {
 		span.SetName("/albums/:id GET")
 		defer span.End()
 		id := c.Param("id")
-		span.SetAttributes(attribute.Key("album-store.request.parameters").String(fmt.Sprintf("%s=%s", "ID", id)))
+		span.SetAttributes(attribute.Key("album-service.request.parameters").String(fmt.Sprintf("%s=%s", "ID", id)))
 		albumId, err := strconv.Atoi(id)
 		if bindJsonToModelFails(c, err, id, span) {
 			return
@@ -89,9 +89,9 @@ func makeGetAlbumByIDHandler(repo AlbumRepository) gin.HandlerFunc {
 		album, found := repo.GetByID(albumId)
 		if found {
 			span.SetStatus(codes.Ok, "")
-			span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusOK))
+			span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusOK))
 			jsonVal, _ := json.Marshal(album)
-			span.SetAttributes(attribute.Key("album-store.response.body").String(string(jsonVal)))
+			span.SetAttributes(attribute.Key("album-service.response.body").String(string(jsonVal)))
 			c.JSON(http.StatusOK, album)
 			return
 		}
@@ -99,7 +99,7 @@ func makeGetAlbumByIDHandler(repo AlbumRepository) gin.HandlerFunc {
 		serverError := model.ServerError{Message: errorMessage}
 		span.SetStatus(codes.Error, serverError.Message)
 		span.AddEvent(errorMessage)
-		span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusBadRequest))
+		span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusBadRequest))
 		c.AbortWithStatusJSON(http.StatusBadRequest, serverError)
 	}
 }
@@ -213,7 +213,7 @@ func getErrorMsg(fe validator.FieldError) string {
 	return ""
 }
 
-var serviceName = "album-store"
+var serviceName = "album-service"
 var startAddress = "0.0.0.0:9080"
 
 func bindJsonToModelFails(c *gin.Context, err error, id string, span trace.Span) bool {
@@ -223,7 +223,7 @@ func bindJsonToModelFails(c *gin.Context, err error, id string, span trace.Span)
 		span.SetStatus(codes.Error, serverError.Message)
 		span.AddEvent(errorMessage)
 		// span.RecordError(err, )// todo - figure out when to use this instead of event
-		span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusBadRequest))
+		span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusBadRequest))
 		c.AbortWithStatusJSON(http.StatusBadRequest, serverError)
 		return true
 	}
@@ -233,7 +233,7 @@ func bindJsonToModelFails(c *gin.Context, err error, id string, span trace.Span)
 func buildMalformedJsonErrorResponse(c *gin.Context, span trace.Span, err error) bool {
 	span.SetStatus(codes.Error, "Malformed JSON. Not valid for Album")
 	span.AddEvent(fmt.Sprintf("Malformed JSON. %s", err))
-	span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusBadRequest))
+	span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusBadRequest))
 	c.AbortWithStatusJSON(http.StatusBadRequest, model.ServerError{Message: "Malformed JSON. Not valid for Album"})
 	return true
 }
@@ -255,7 +255,7 @@ func processValidationBindingError(err error, span trace.Span, c *gin.Context, l
 		serverErrorMessage, _ := json.Marshal(serverError)
 		span.SetStatus(codes.Error, "Album JSON field validation failed")
 		span.AddEvent(string(serverErrorMessage))
-		span.SetAttributes(attribute.Key("album-store.response.code").Int(http.StatusBadRequest))
+		span.SetAttributes(attribute.Key("album-service.response.code").Int(http.StatusBadRequest))
 		c.AbortWithStatusJSON(http.StatusBadRequest, serverError)
 		return true
 	}

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "album-store.fullname" . }}
+  name: {{ include "album-service.fullname" . }}
   {{- with .Values.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    {{- include "album-store.labels" . | nindent 4 }}
+    {{- include "album-service.labels" . | nindent 4 }}
 spec:
   internalTrafficPolicy: Cluster
   type: {{ .Values.service.type }}
@@ -18,4 +18,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "album-store.selectorLabels" . | nindent 4 }}
+    {{- include "album-service.selectorLabels" . | nindent 4 }}

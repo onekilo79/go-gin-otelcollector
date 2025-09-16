@@ -9,9 +9,9 @@
 
 local changes to your `/etc/hosts` to use nginx-ingress with the k3d cluster.
 
-`proxy-service.local` is included in this configuration if you are following the album-store config changes.
+`proxy-service.local` is included in this configuration if you are following the album-service config changes.
 
-`127.0.0.1	localhost k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local album-store.local proxy-service.local`
+`127.0.0.1	localhost k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local album-service.local proxy-service.local`
 
 ### 0.1 K3D Registry info
 
@@ -65,7 +65,7 @@ This will mean the liveness probe will fail and the proxy-service will eventuall
 
 1. Import the folder `../test`
 1. Set Environment to `proxy-service.local`
-1. Open a test in the `Album-Store` collection and run it.
+1. Open a test in the `album-service` collection and run it.
 
 ### 4.3 Browser
 
@@ -76,8 +76,8 @@ This will mean the liveness probe will fail and the proxy-service will eventuall
 Each Span will also have 2 sub spans. 
 
 * The original call to Proxy-Service.
-  * 1 call http to Album-Store.
-  * 1 call to Album-Store.
+  * 1 call http to album-service.
+  * 1 call to album-service.
 
 [View Jaeger to see spans](http://jaeger.local:8070/search?limit=20&service=proxy-service)
 

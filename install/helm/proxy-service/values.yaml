@@ -54,7 +54,7 @@ deployment:
     - name: OTEL_LOCATION
       value: "opentelemetry-collector.observability.svc.cluster.local:4318"
     - name: ALBUM_STORE_URL
-      value: "http://album-store.album-store.svc.cluster.local:9080"
+      value: "http://album-service.album-service.svc.cluster.local:9080"
 
 istio:
   enabled: true

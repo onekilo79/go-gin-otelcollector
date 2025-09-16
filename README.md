@@ -15,7 +15,7 @@ Sends data to the following services:
 
 ## Proxy-Service
 
-Standalone server that proxies calls to the `album-store`
+Standalone server that proxies calls to the `album-service`
 
 Used for showing nested spans in open-telemetry.
 
@@ -41,7 +41,7 @@ Pick the `proxy-service` from the `service` dropdown to see nested spans.
 
 [Docker-Compose fully inclusive instructions](docs/Run-Docker-Compose-Install-Full.md)
 
-[Docker-Compose with album-store as an external application instructions](docs/Run-Docker-Compose-Install-Limited.md)
+[Docker-Compose with album-service as an external application instructions](docs/Run-Docker-Compose-Install-Limited.md)
 
 ### K3D cluster
 

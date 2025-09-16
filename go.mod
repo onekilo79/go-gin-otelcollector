@@ -1,4 +1,4 @@
-module github.com/mcarr-and/go-gin-otelcollector/album-store
+module github.com/mcarr-and/go-gin-otelcollector/album-service
 
 go 1.24.0
 

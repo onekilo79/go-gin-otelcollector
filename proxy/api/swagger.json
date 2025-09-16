@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Simple golang application that proxies calls to Album-Store",
+        "description": "Simple golang application that proxies calls to album-service",
         "title": "Proxy Service API",
         "contact": {},
         "license": {

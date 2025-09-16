@@ -20,7 +20,7 @@ make docker-build-album
 make docker-compose-limited-start;
 ```
 
-## 3. Start album-store Go/Gin Server
+## 3. Start album-service Go/Gin Server
 
 ### 3.1 From the Command line 
 
@@ -38,7 +38,7 @@ Debug the application from the provided launch.json
 
 You will need to set your Environment with the following and run the main.go
 
-`GRPC_GO_LOG_SEVERITY_LEVEL=info;GRPC_GO_LOG_VERBOSITY_LEVEL=99;INSTANCE_NAME=album-store-1;NAMESPACE=no-namespace;OTEL_LOCATION=localhost:4327`
+`GRPC_GO_LOG_SEVERITY_LEVEL=info;GRPC_GO_LOG_VERBOSITY_LEVEL=99;INSTANCE_NAME=album-service-1;NAMESPACE=no-namespace;OTEL_LOCATION=localhost:4327`
 
 #### Note: the application will not start without the OpenTelemetry collector running
 
@@ -56,15 +56,15 @@ make local-test;
 
 1. Import the collection and environment into your postman
 1. Set Environment to `localhost`
-1. Open a test in the `Album-Store` collection and run it.
+1. Open a test in the `album-service` collection and run it.
 
 ## 5. View the events in the different Services
 
-[View Jaeger](http://localhost:16696/search?limit=20&service=album-store)
+[View Jaeger](http://localhost:16696/search?limit=20&service=album-service)
 
 [View Prometheus](http://localhost:9090/graph?g0.expr=%7Bjob%3D~%22.%2B%22%7D%20&g0.tab=0&g0.stacked=0&g0.show_exemplars=0&g0.range_input=1h)
 
-## 6. Stop album-store server & Services  
+## 6. Stop album-service server & Services  
 
 ### 1. Stop Server
 

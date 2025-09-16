@@ -84,15 +84,15 @@ services:
       - "3000:3000"
     logging: *logging
 
-  # Album-Store Go Application
-  album-store:
-    container_name: album-store
-    image: album-store:latest
+  # album-service Go Application
+  album-service:
+    container_name: album-service
+    image: album-service:latest
     restart: always
     environment:
       - OTEL_LOCATION=otel-collector:4318
       - NAMESPACE=default
-      - INSTANCE_NAME=album-store-1
+      - INSTANCE_NAME=album-service-1
     ports:
       - "9080:9080"
     depends_on:
@@ -108,7 +108,7 @@ services:
       - OTEL_LOCATION=otel-collector:4318
       - NAMESPACE=default
       - INSTANCE_NAME=proxy-service-1
-      - ALBUM_STORE_URL=http://album-store:9080
+      - ALBUM_STORE_URL=http://album-service:9080
     ports:
       - "9070:9070"
     depends_on:

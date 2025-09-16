@@ -2,7 +2,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ include "album-store.fullname" . }}-gateway
+  name: {{ include "album-service.fullname" . }}-gateway
   namespace: {{.Release.Namespace}}
 spec:
   selector:
@@ -10,7 +10,7 @@ spec:
   servers:
     - port:
         number: {{.Values.istio.gatewayPort}}
-        name: {{lower .Values.istio.protocol}}-{{ include "album-store.fullname" . }}
+        name: {{lower .Values.istio.protocol}}-{{ include "album-service.fullname" . }}
         protocol: {{.Values.istio.protocol}}
       hosts:
         - "{{.Values.istio.host}}"

@@ -58,13 +58,13 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "grafana-dashboards.fullname" . }}-album-store
+  name: {{ include "grafana-dashboards.fullname" . }}-album-service
   labels:
     {{- include "grafana-dashboards.labels" . | nindent 4 }}
     grafana_dashboard: "1"
 data:
-  album-store.json: |-
-{{ .Files.Get "dashboards/album-store.json" | indent 4 }}
+  album-service.json: |-
+{{ .Files.Get "dashboards/album-service.json" | indent 4 }}
 ---
 {{- end }}
 

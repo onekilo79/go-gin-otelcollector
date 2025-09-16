@@ -3,14 +3,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "album-store.fullname" . }}
+  name: {{ include "album-service.fullname" . }}
   labels:
-    {{- include "album-store.labels" . | nindent 4 }}
+    {{- include "album-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "album-store.fullname" . }}
+    name: {{ include "album-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
@@ -31,14 +31,14 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "album-store.fullname" . }}
+  name: {{ include "album-service.fullname" . }}
   labels:
-    {{- include "album-store.labels" . | nindent 4 }}
+    {{- include "album-service.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "album-store.fullname" . }}
+    name: {{ include "album-service.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

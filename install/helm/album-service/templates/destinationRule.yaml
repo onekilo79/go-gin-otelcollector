@@ -2,10 +2,10 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: {{ include "album-store.fullname" . }}-destination-rule
+  name: {{ include "album-service.fullname" . }}-destination-rule
   namespace: {{.Release.Namespace}}
 spec:
-  host: {{ include "album-store.fullname" . }}
+  host: {{ include "album-service.fullname" . }}
   trafficPolicy:
     tls:
       mode: {{.Values.istio.tlsMode}}

@@ -2,12 +2,12 @@
 
 ## Project Overview
 - This is a Go backend for a music store, using the Gin framework and OpenTelemetry for observability.
-- Two main services: `album-store` (core API) and `proxy-service` (proxies requests to album-store, demonstrates nested OpenTelemetry spans).
+- Two main services: `album-service` (core API) and `proxy-service` (proxies requests to album-service, demonstrates nested OpenTelemetry spans).
 - Designed for deployment in Kubernetes (K3D, Microk8s, etc.) and Docker Compose. Helm charts are provided for all major components.
 
 ## Architecture & Data Flow
-- `album-store` exposes REST endpoints and is instrumented with OpenTelemetry.
-- `proxy-service` uses `otelhttp.client` to call `album-store`, producing nested spans for tracing.
+- `album-service` exposes REST endpoints and is instrumented with OpenTelemetry.
+- `proxy-service` uses `otelhttp.client` to call `album-service`, producing nested spans for tracing.
 - Observability stack includes Jaeger, Prometheus, and OpenTelemetry Collector.
 - Istio is used for ingress and service mesh features (see `install/helm/istio-ingress-charts`).
 
@@ -30,7 +30,7 @@
 
 ## Integration Points
 - External dependencies: Jaeger, Prometheus, OpenTelemetry Collector, Grafana.
-- Service communication: `proxy-service` calls `album-store` via HTTP, with tracing enabled.
+- Service communication: `proxy-service` calls `album-service` via HTTP, with tracing enabled.
 - Helm repo can be added via: `helm repo add go-gin-opentelemetry 'https://mcarr-and.github.io/go-gin-otelcollector/install/helm/charts'`
 
 ## Key Files & Directories

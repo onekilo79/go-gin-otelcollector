@@ -27,7 +27,7 @@ change `192.168.XX.XX` to the IP Address of a Worker Node raspberrypi.
 ```bash
 export REGISTRY_IP=XXX.XXX.XX.XX;
 sudo bash -c "cat >> /etc/hosts << EOF
-$REGISTRY_IP k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local kiali.local album-store.local proxy-serivce.local registry.local
+$REGISTRY_IP k-dashboard.local jaeger.local otel-collector.local grafana.local prometheus.local kiali.local album-service.local proxy-serivce.local registry.local
 EOF";
 ```
 
@@ -56,20 +56,20 @@ The first section on `DOCKER_OPTS` fixes the following:
 
 You will get an error message when you try and do a `docker image push.` if your registry is not in your DOCKER_OPTS
 
-`docker image push registry.local:32000/album-store:latest;`
+`docker image push registry.local:32000/album-service:latest;`
 
 The error message looks like this:
 
 ```
-The push refers to repository [registry.local:32000/album-store]
+The push refers to repository [registry.local:32000/album-service]
 Get https://registry.local:32000/v2/: http: server gave HTTP response to HTTPS client
 ```
 
 The Second section on `/etc/hosts` fixes the following error from Rancher-Desktop Docker not resolving the registry
 
 ```
-docker push registry.local:32000/album-store:0.2.2;
-The push refers to repository [registry.local:32000/album-store]
+docker push registry.local:32000/album-service:0.2.2;
+The push refers to repository [registry.local:32000/album-service]
 Get "http://registry.local:32000/v2/": dial tcp: lookup registry.local: Try again
 ```
 
@@ -170,7 +170,7 @@ Services:
   * generate token `kubectl -n istio-system create token kiali;`
 
 Applications:
-* [Album Store](http://album-store.local)
+* [Album Store](http://album-service.local)
 * [Proxy Service](http://proxy-service.local)
 
 ## (Note) about Istio DNS and application start time.

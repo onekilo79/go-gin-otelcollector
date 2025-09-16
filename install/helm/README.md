@@ -19,7 +19,7 @@ Check out this example:
 ```bash
 cd install/helm
 helm-docs  
-helm package album-store -d charts; 
+helm package album-service -d charts; 
 helm package proxy-service -d charts;
 helm package grafana-dashboards -d charts;
 helm package istio-ingress-charts -d charts;

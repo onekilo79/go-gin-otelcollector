@@ -17,7 +17,7 @@ ARG GIT_HASH
 WORKDIR /app/
 COPY . .
 RUN go mod download
-RUN --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 go build -ldflags "-X main.version=0.1 -X main.gitHash=${GIT_HASH}" -v -o album-store-bin main.go
+RUN --mount=type=cache,target=/root/.cache/go-build CGO_ENABLED=0 go build -ldflags "-X main.version=0.1 -X main.gitHash=${GIT_HASH}" -v -o album-service-bin main.go
 FROM alpine:3.17.3
-COPY --from=build /app/album-store-bin /app/album-store-bin
-CMD ["/app/album-store-bin"]
+COPY --from=build /app/album-service-bin /app/album-service-bin
+CMD ["/app/album-service-bin"]

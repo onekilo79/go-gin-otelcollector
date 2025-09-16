@@ -20,16 +20,16 @@ https://kubernetes.github.io/ingress-nginx/troubleshooting/
 
 # Album Store 
 
-## Album-Store Logs for the 1st found pod(follow) 
+## album-service Logs for the 1st found pod(follow) 
 
 ```bash
-kubectl logs -f -n album-store $(kubectl -n album-store get pods -l app.kubernetes.io/name=album-store -o jsonpath="{.items[0].metadata.name}")
+kubectl logs -f -n album-service $(kubectl -n album-service get pods -l app.kubernetes.io/name=album-service -o jsonpath="{.items[0].metadata.name}")
 ```
 
-# Test album-store with curl
+# Test album-service with curl
 
 ```bash
-curl --insecure --location 'http://album-store.local:8070/albums/'; 
+curl --insecure --location 'http://album-service.local:8070/albums/'; 
 ```
 
 # OpenTelemetry

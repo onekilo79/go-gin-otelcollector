@@ -8,7 +8,7 @@ Terminal window 1:
   make docker-compose-limited-start
 ```
 
-## 1. Start Album-store
+## 1. Start album-service
 
 Terminal window 2:
 
@@ -52,7 +52,7 @@ Terminal window 3:
 
 1. Import the folder `../test`
 1. Set Environment to `localhost:9070`
-1. Open a test in the `Album-Store` collection and run it.
+1. Open a test in the `album-service` collection and run it.
 
 
 ## 4. view spans in Jaeger
@@ -60,7 +60,7 @@ Terminal window 3:
 Each Span will also have 2 sub spans.
 
 * The original call to Proxy-Service.
-    * 1 call http to Album-Store.
-    * 1 call to Album-Store.
+    * 1 call http to album-service.
+    * 1 call to album-service.
 
 [Jaeger proxy-service spans](http://localhost:16696/search?service=proxy-service)

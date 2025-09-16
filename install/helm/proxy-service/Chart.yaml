@@ -1,6 +1,6 @@
 apiVersion: v2
 name: proxy-service
-description: Chart for go Proxy-Service to call go Album-Store
+description: Chart for go Proxy-Service to call go album-service
 
 # A chart can be either an 'application' or a 'library' chart.
 #

@@ -106,7 +106,7 @@ docker-local-start: setup-proxy-docker-properties
 
 .PHONY: local-start-k3d
 local-start-k3d: build setup-proxy-properties
-	$(proxy_setup) OTEL_LOCATION=otel-collector.local:8070 ALBUM_STORE_URL=http://album-store.album-store.svc.cluster.local:9080 ./proxy-service-bin
+	$(proxy_setup) OTEL_LOCATION=otel-collector.local:8070 ALBUM_STORE_URL=http://album-service.album-service.svc.cluster.local:9080 ./proxy-service-bin
 
 .PHONY: local-start-proxy
 local-start-proxy: build setup-proxy-properties

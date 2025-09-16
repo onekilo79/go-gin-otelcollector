@@ -7,7 +7,7 @@ build:
 	go mod tidy;
 	go get;
 	go clean;
-	go build -ldflags "-X main.version=0.1 -X main.gitHash=`git rev-parse --short HEAD`" -v -o album-store-bin
+	go build -ldflags "-X main.version=0.1 -X main.gitHash=`git rev-parse --short HEAD`" -v -o album-service-bin
 
 .PHONY: test
 test:
@@ -51,7 +51,7 @@ set-local-test:
 	$(eval url_value := http://localhost:9080)
 
 set-k3d-album-test:
-	$(eval url_value := http://album-store.local:8070)
+	$(eval url_value := http://album-service.local:8070)
 
 set-k3d-proxy-test:
 	$(eval url_value := http://proxy-service.local:8070)
@@ -105,63 +105,63 @@ build-raspberry-pi:
 
 .PHONY: docker-build-album
 docker-build-album: eval-git-hash
-	DOCKER_BUILDKIT=1 docker build --build-arg GIT_HASH=$(GIT_HASH) $(BUILD_PLATFORM_RAS_PI) -t album-store:0.2.2 -t album-store:latest .
+	DOCKER_BUILDKIT=1 docker build --build-arg GIT_HASH=$(GIT_HASH) $(BUILD_PLATFORM_RAS_PI) -t album-service:0.2.2 -t album-service:latest .
 
 .PHONY: docker-tag-k3d-registry-album
 docker-tag-k3d-registry-album: docker-build-album
-	docker tag album-store:latest localhost:54094/album-store:latest;
-	docker tag album-store:0.2.2 localhost:54094/album-store:0.2.2;
-	docker push localhost:54094/album-store:latest;
-	docker push localhost:54094/album-store:0.2.2;
+	docker tag album-service:latest localhost:54094/album-service:latest;
+	docker tag album-service:0.2.2 localhost:54094/album-service:0.2.2;
+	docker push localhost:54094/album-service:latest;
+	docker push localhost:54094/album-service:0.2.2;
 
 .PHONY: docker-tag-microk8s-registry-album
 docker-tag-microk8s-registry-album: build-raspberry-pi docker-build-album
-	docker tag album-store:latest registry.local:32000/album-store:latest;
-	docker tag album-store:0.2.2 registry.local:32000/album-store:0.2.2;
-	docker push registry.local:32000/album-store:latest;
-	docker push registry.local:32000/album-store:0.2.2;
+	docker tag album-service:latest registry.local:32000/album-service:latest;
+	docker tag album-service:0.2.2 registry.local:32000/album-service:0.2.2;
+	docker push registry.local:32000/album-service:latest;
+	docker push registry.local:32000/album-service:0.2.2;
 
 .PHONY: k3d-album-deploy-deployment
 k3d-album-deploy-deployment: docker-tag-k3d-registry-album
-	kubectl apply -f ./install/kubectl/album-store-k3d-deployment.yaml
+	kubectl apply -f ./install/kubectl/album-service-k3d-deployment.yaml
 
 .PHONY: k3d-album-undeploy-deployment
 k3d-album-undeploy-deployment:
-	kubectl delete -f ./install/kubectl/album-store-k3d-deployment.yaml
+	kubectl delete -f ./install/kubectl/album-service-k3d-deployment.yaml
 
 .PHONY: k3d-album-deploy-pod
 k3d-album-deploy-pod: docker-tag-k3d-registry-album
-	kubectl apply -f ./install/kubectl/album-store-k3d-pod.yaml
+	kubectl apply -f ./install/kubectl/album-service-k3d-pod.yaml
 
 .PHONY: k3d-album-undeploy-pod
 k3d-album-undeploy-pod:
-	kubectl delete -f ./install/kubectl/album-store-k3d-pod.yaml
+	kubectl delete -f ./install/kubectl/album-service-k3d-pod.yaml
 
 setup-album-properties:
-	$(eval album_setup := NAMESPACE=no-namespace INSTANCE_NAME=album-store-1)
+	$(eval album_setup := NAMESPACE=no-namespace INSTANCE_NAME=album-service-1)
 
 setup-album-docker-properties:
-	$(eval album_setup := -e NAMESPACE=no-namespace -e INSTANCE_NAME=album-store-1)
+	$(eval album_setup := -e NAMESPACE=no-namespace -e INSTANCE_NAME=album-service-1)
 
 .PHONY: docker-k3d-start
 docker-k3d-start: docker-build-album setup-album-docker-properties
-	docker run -d -p 9080:9080 $(album_setup) -e OTEL_LOCATION=otel-collector.local:8070 --name album-store album-store:0.1
+	docker run -d -p 9080:9080 $(album_setup) -e OTEL_LOCATION=otel-collector.local:8070 --name album-service album-service:0.1
 
 .PHONY: docker-local-start
 docker-local-start: docker-build-album setup-album-docker-properties
-	docker run -d -p 9080:9080 $(album_setup) -e OTEL_LOCATION=localhost:4327 --name album-store-local album-store:0.1
+	docker run -d -p 9080:9080 $(album_setup) -e OTEL_LOCATION=localhost:4327 --name album-service-local album-service:0.1
 
 .PHONY: local-start-k3d
 local-start-k3d: build setup-album-properties
-	$(album_setup) OTEL_LOCATION=otel-collector.local:8070 ./album-store-bin
+	$(album_setup) OTEL_LOCATION=otel-collector.local:8070 ./album-service-bin
 
 .PHONY: local-start
 local-start: build setup-album-properties
-	$(album_setup) OTEL_LOCATION=localhost:4327 ./album-store-bin
+	$(album_setup) OTEL_LOCATION=localhost:4327 ./album-service-bin
 
 .PHONY: docker-local-stop
 docker-local-stop:
-	docker stop album-store-local;
+	docker stop album-service-local;
 
 .PHONY: docker-compose-full-stop
 docker-compose-full-stop:

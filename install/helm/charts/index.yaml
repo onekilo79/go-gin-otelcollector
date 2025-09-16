@@ -1,9 +1,20 @@
 apiVersion: v1
 entries:
+  album-service:
+  - apiVersion: v2
+    appVersion: 0.2.2
+    created: "2025-09-16T10:03:02.1718256+01:00"
+    description: Chart for album-service go application
+    digest: 96966403ffc84eeaa18a7c2d3a0e9c1d76f2cb1e52e19fb007fa2cabf756d055
+    name: album-service
+    type: application
+    urls:
+    - album-service-0.2.5.tgz
+    version: 0.2.5
   album-store:
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.166567+01:00"
+    created: "2025-09-16T10:03:02.1766673+01:00"
     description: Chart for Album-Store go application
     digest: 9b94bf0dc34089a8c0c30f4888c969319c6f4bd61c5eabaf88e6fb1a21e232e6
     name: album-store
@@ -13,7 +24,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.165795+01:00"
+    created: "2025-09-16T10:03:02.1761443+01:00"
     description: Chart for Album-Store go application
     digest: 2f44ad38ea41c18226ea0c6bfc04de8123edb9fb4a78e82ad91e07d0b9b4e3a5
     name: album-store
@@ -23,7 +34,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.164311+01:00"
+    created: "2025-09-16T10:03:02.1756092+01:00"
     description: Chart for Album-Store go example
     digest: a17f1bd06b99f22958138f134303e25c89673096f92bfec1bb013200bef0802a
     name: album-store
@@ -33,7 +44,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.2.1
-    created: "2023-05-21T23:49:48.162606+01:00"
+    created: "2025-09-16T10:03:02.1750863+01:00"
     description: Chart for Album-Store go example
     digest: 586a7cd147d0e7b7f20aad884211fdccb1642cf435bd14f3ca8a137e456b0a5e
     name: album-store
@@ -43,7 +54,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-05-21T23:49:48.160652+01:00"
+    created: "2025-09-16T10:03:02.1733895+01:00"
     description: A Helm chart for Kubernetes
     digest: 57067c65ba78a3174dc206b4916c43c15275fa6e21f8f55741b0ac2942773d6f
     name: album-store
@@ -53,7 +64,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-05-21T23:49:48.159531+01:00"
+    created: "2025-09-16T10:03:02.1728651+01:00"
     description: A Helm chart for Kubernetes
     digest: 38b7d581ac1f13771500ef56e075ea92bd2e54be6fa580d8f0c1431009d16e6c
     name: album-store
@@ -63,7 +74,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-21T23:49:48.157708+01:00"
+    created: "2025-09-16T10:03:02.1723449+01:00"
     description: A Helm chart for Kubernetes
     digest: b65858f31838a62f8ae954f74b8ce9f5a227dd7ffe9405eaecc8299fed547610
     name: album-store
@@ -74,7 +85,7 @@ entries:
   grafana-dashboards:
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2023-05-21T23:49:48.179643+01:00"
+    created: "2025-09-16T10:03:02.181418+01:00"
     description: Collection of grafana dashboards for this example project
     digest: 13af623fd4305a11f5698d1e4d6a7a83ff6c8613940549a353cca00c3c14dd91
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -91,7 +102,7 @@ entries:
     version: 1.0.7
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2023-05-21T23:49:48.177435+01:00"
+    created: "2025-09-16T10:03:02.1802657+01:00"
     description: Collection of grafana dashboards for this example project
     digest: 11937b1cb8cbb30d52cafa466344c1793457c1aa39358225c5b7a639faafeb64
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -108,7 +119,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2023-05-21T23:49:48.175627+01:00"
+    created: "2025-09-16T10:03:02.1792359+01:00"
     description: Collection of grafana dashboards for this example project
     digest: 3a8d99218419f3fe834b5ef69f89532eac3b0ace70743809dda613a28c6c3602
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -125,7 +136,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2023-05-21T23:49:48.173992+01:00"
+    created: "2025-09-16T10:03:02.178713+01:00"
     description: Collection of grafana dashboards for this example project
     digest: 60f60de73da3707d4c51a020fac58d4270dd3803487de27f8a365a4c79a62e0c
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -142,7 +153,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-05-21T23:49:48.172367+01:00"
+    created: "2025-09-16T10:03:02.1782019+01:00"
     description: A Helm chart that deploys my collection of Grafana dashboards
     digest: 820a40a63401b0f049c3d06065321b65c69bb407e43839c12e3a68d3b65e0608
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -159,7 +170,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2023-05-21T23:49:48.170137+01:00"
+    created: "2025-09-16T10:03:02.1771813+01:00"
     description: A Helm chart that deploys my collection of Grafana dashboards
     digest: ad070f8b565ca10f8c6b30baea8fe117d7795702728e69d618ff1e93853444a9
     home: https://github.com/mcarr-and/go-gin-otelcollector
@@ -177,7 +188,7 @@ entries:
   istio-ingress-charts:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.18494+01:00"
+    created: "2025-09-16T10:03:02.1834821+01:00"
     description: A Helm chart for Kubernetes
     digest: 58527ad8b4d2094e07eb16c009dc5a42ac7f0e827788308c2835c9686f3498a6
     name: istio-ingress-charts
@@ -187,7 +198,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.184386+01:00"
+    created: "2025-09-16T10:03:02.1834821+01:00"
     description: A Helm chart for Kubernetes
     digest: 4792ae8eb51441c3e6241a200ab0f05fc1a36f0fc4a503d20b7808d3d64600e0
     name: istio-ingress-charts
@@ -197,7 +208,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.183336+01:00"
+    created: "2025-09-16T10:03:02.1829721+01:00"
     description: A Helm chart for Kubernetes
     digest: 58a4f4991c803940147e08f43f58234116647e677313a65b4f4ddd9a656ef9e4
     name: istio-ingress-charts
@@ -207,7 +218,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.182559+01:00"
+    created: "2025-09-16T10:03:02.182464+01:00"
     description: A Helm chart for Kubernetes
     digest: b035c8079c8eb5cfa30860966dc3d40df27a986f6c2dd2b7e08b186a7b5abff9
     name: istio-ingress-charts
@@ -217,7 +228,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.181698+01:00"
+    created: "2025-09-16T10:03:02.18194+01:00"
     description: A Helm chart for Kubernetes
     digest: 5d827ed06459147afad9f9ce44cd3a6963aed39845adecececf3f915d15f789d
     name: istio-ingress-charts
@@ -227,7 +238,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-05-21T23:49:48.180789+01:00"
+    created: "2025-09-16T10:03:02.181418+01:00"
     description: A Helm chart for Kubernetes
     digest: 7058be29c8ef34ebd2788a0dcadd0ba85d9bf629ef544b1ee2ea08a6c991b6e7
     name: istio-ingress-charts
@@ -238,7 +249,7 @@ entries:
   proxy-service:
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.1926+01:00"
+    created: "2025-09-16T10:03:02.1865938+01:00"
     description: Chart for go Proxy-Service to call go Album-Store
     digest: 1a106bb9dfe795c04a27a4637692acee226b7e973cead47ee0baba1963b1005e
     name: proxy-service
@@ -248,7 +259,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.191797+01:00"
+    created: "2025-09-16T10:03:02.1860746+01:00"
     description: Chart for go Proxy-Service to call go Album-Store
     digest: 1509d92ce3d2b5efa9b8a9a75c04d2a215ebfe71688e496fee7992eb1ee5281b
     name: proxy-service
@@ -258,7 +269,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 0.2.2
-    created: "2023-05-21T23:49:48.190478+01:00"
+    created: "2025-09-16T10:03:02.1855597+01:00"
     description: Chart for go Proxy-Service to call go Album-Store
     digest: 9f9c6c07d186607546248a5d3150ec0e7650fba8c563d69bf938e11a3b2d6e83
     name: proxy-service
@@ -268,7 +279,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.2.1
-    created: "2023-05-21T23:49:48.189107+01:00"
+    created: "2025-09-16T10:03:02.1855597+01:00"
     description: Chart for go Proxy-Service to call go Album-Store
     digest: 1c91927c17cd302a430d9ef2fdd805e3f26b903bde2f17bc6e99950bbecd2dd4
     name: proxy-service
@@ -278,7 +289,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-05-21T23:49:48.187826+01:00"
+    created: "2025-09-16T10:03:02.1850427+01:00"
     description: A Helm chart for Kubernetes
     digest: e4b3c9e84e6fcc8ce1783331467bdac3139a141b6353810260e12d877111b406
     name: proxy-service
@@ -288,7 +299,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 0.1.1
-    created: "2023-05-21T23:49:48.186737+01:00"
+    created: "2025-09-16T10:03:02.184507+01:00"
     description: A Helm chart for Kubernetes
     digest: 753148557025b6205c4ad593874aa9aeae139bdddb055d4ee7743836770d8e06
     name: proxy-service
@@ -298,7 +309,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-05-21T23:49:48.185909+01:00"
+    created: "2025-09-16T10:03:02.1839922+01:00"
     description: A Helm chart for Kubernetes
     digest: 241607bc8be5c00154611b933198611e4ff29e7f8d0cc0ddeaff2aaaf9a7be16
     name: proxy-service
@@ -306,4 +317,4 @@ entries:
     urls:
     - proxy-service-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-21T23:49:48.154049+01:00"
+generated: "2025-09-16T10:03:02.1707896+01:00"

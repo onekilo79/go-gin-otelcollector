@@ -14,7 +14,7 @@ Collection of grafana dashboards for this example project
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| dashboards.albumStore | bool | `true` | Toggles the album-store dashboard |
+| dashboards.albumStore | bool | `true` | Toggles the album-service dashboard |
 | dashboards.golang | bool | `true` | Toggles the crowdsec dashboards |
 | dashboards.jaegerAllInOne | bool | `true` | Toggles the cert-manager dashboards |
 | dashboards.otelCollector | bool | `true` | Toggles the otelCollector dashboards |

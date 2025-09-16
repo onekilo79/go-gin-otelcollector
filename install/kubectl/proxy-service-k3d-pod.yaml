@@ -61,7 +61,7 @@ spec:
         - name: GRPC_GO_LOG_SEVERITY_LEVEL
           value: "info"
         - name: ALBUM_STORE_URL
-          value: "http://album-store.album-store.svc.cluster.local:9080"
+          value: "http://album-service.album-service.svc.cluster.local:9080"
       ports:
         - name: http
           containerPort: 9070

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "e74aceb6-743e-46b7-b6a7-2457f2330d11",
-		"name": "Album-Store",
+		"name": "album-service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

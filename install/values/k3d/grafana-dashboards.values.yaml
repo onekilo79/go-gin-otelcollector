@@ -16,7 +16,7 @@ dashboards:
   golang: true
   # -- Toggles the otelCollector dashboards
   otelCollector: true
-  # -- Toggles the album-store dashboard
+  # -- Toggles the album-service dashboard
   albumStore: true
   # -- Toggles the proxy-service dashboard
   proxyService: true

@@ -17,7 +17,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/mcarr-and/go-gin-otelcollector/album-store/model"
+	"github.com/mcarr-and/go-gin-otelcollector/album-service/model"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 
@@ -79,7 +79,7 @@ func Test_getAllAlbums(t *testing.T) {
 	assert.Equal(t, 0, len(finishedSpans[0].Events()))
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "200", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "200", attributeMap["album-service.response.code"].Emit())
 
 	// assert on albums as needed
 }
@@ -106,8 +106,8 @@ func Test_getAlbumById(t *testing.T) {
 	assert.Equal(t, 0, len(finishedSpans[0].Events()))
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "200", attributeMap["album-store.response.code"].Emit())
-	assert.Equal(t, `{"id":2,"title":"Jeru","artist":"Gerry Mulligan","price":17.99}`, attributeMap["album-store.response.body"].Emit())
+	assert.Equal(t, "200", attributeMap["album-service.response.code"].Emit())
+	assert.Equal(t, `{"id":2,"title":"Jeru","artist":"Gerry Mulligan","price":17.99}`, attributeMap["album-service.response.body"].Emit())
 
 	// assert on album as needed
 }
@@ -137,7 +137,7 @@ func Test_getAlbumById_InvalidID_Character(t *testing.T) {
 	assert.Equal(t, expectedErrorMessage, finishedSpans[0].Events()[0].Name)
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "400", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "400", attributeMap["album-service.response.code"].Emit())
 
 	assert.Equal(t, expectedErrorMessage, serverError.Message)
 }
@@ -168,7 +168,7 @@ func Test_getAlbumById_NotFound(t *testing.T) {
 	assert.Equal(t, expectedErrorMessage, finishedSpans[0].Events()[0].Name)
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "400", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "400", attributeMap["album-service.response.code"].Emit())
 
 	assert.Equal(t, expectedErrorMessage, serverError.Message)
 }
@@ -199,7 +199,7 @@ func Test_postAlbum(t *testing.T) {
 
 	// attributeMap := makeKeyMap(finishedSpans[0].Attributes())
 
-	// assert.Equal(t, "201", attributeMap["album-store.response.code"].Emit())
+	// assert.Equal(t, "201", attributeMap["album-service.response.code"].Emit())
 
 	assert.Equal(t, album, expectedAlbum)
 	// assert on repo state as needed
@@ -271,7 +271,7 @@ func Test_postAlbum_BadRequest_BadJSON_MinValues(t *testing.T) {
 	assert.Equal(t, bindingErrorMessage, finishedSpans[0].Events()[0].Name)
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "400", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "400", attributeMap["album-service.response.code"].Emit())
 
 	assert.Equal(t, 4, len(serverError.BindingErrors))
 	assert.Equal(t, "id", serverError.BindingErrors[0].Field)
@@ -315,7 +315,7 @@ func Test_postAlbum_BadRequest_BadJSON_MaxValues(t *testing.T) {
 	assert.Equal(t, bindingErrorMessage, finishedSpans[0].Events()[0].Name)
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "400", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "400", attributeMap["album-service.response.code"].Emit())
 	assert.Equal(t, 2, len(serverError.BindingErrors))
 	assert.Equal(t, "id", serverError.BindingErrors[0].Field)
 	assert.Equal(t, "above maximum value", serverError.BindingErrors[0].Message)
@@ -350,7 +350,7 @@ func Test_postAlbum_BadRequest_Malformed_JSON(t *testing.T) {
 	assert.Equal(t, "Malformed JSON. unexpected EOF", finishedSpans[0].Events()[0].Name)
 
 	attributeMap := makeKeyMap(finishedSpans[0].Attributes())
-	assert.Equal(t, "400", attributeMap["album-store.response.code"].Emit())
+	assert.Equal(t, "400", attributeMap["album-service.response.code"].Emit())
 	assert.Equal(t, "Malformed JSON. Not valid for Album", serverError.Message)
 	assert.Equal(t, 0, len(serverError.BindingErrors))
 

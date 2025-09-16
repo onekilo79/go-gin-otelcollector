@@ -49,7 +49,7 @@ func init() {
 
 // @title           Proxy Service API
 // @version         1.0
-// @description     Simple golang application that proxies calls to Album-Store
+// @description     Simple golang application that proxies calls to album-service
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 // @host      localhost:9070
@@ -70,7 +70,7 @@ func makeGetAlbumsHandler() gin.HandlerFunc {
 		span := trace.SpanFromContext(c.Request.Context())
 		span.SetName("/albums GET")
 		defer span.End()
-		// proxy call to album-Store
+		// proxy call to album-service
 		resp, err := Get(c.Request.Context(), albumStoreURL+"/albums")
 		setResponseCodeIfPresent(resp, span)
 		if handleResponseHasError(c, err, "getAlbums", span) {
@@ -112,7 +112,7 @@ func makeGetAlbumByIdHandler() gin.HandlerFunc {
 		if buildErrorInvalidRequestParameters(c, err, id, span) {
 			return
 		}
-		// proxy call to album-Store
+		// proxy call to album-service
 		resp, err := Get(c.Request.Context(), fmt.Sprintf("%v/albums/%v", albumStoreURL, albumID))
 		setResponseCodeIfPresent(resp, span)
 		if handleResponseHasError(c, err, "getAlbumById", span) {
@@ -152,7 +152,7 @@ func makePostAlbumsHandler() gin.HandlerFunc {
 		if failed {
 			return
 		}
-		// proxy call to album-Store
+		// proxy call to album-service
 		resp, err := Post(c.Request.Context(), albumStoreURL+"/albums", "application/json", strings.NewReader(fmt.Sprintf("%v", requestBodyString)))
 		setResponseCodeIfPresent(resp, span)
 		if handleResponseHasError(c, err, "postAlbum", span) {
@@ -173,7 +173,7 @@ func makePostAlbumsHandler() gin.HandlerFunc {
 
 func setResponseCodeIfPresent(resp *http.Response, span trace.Span) {
 	if resp != nil {
-		span.SetAttributes(attribute.Key("album-store.response.code").Int(resp.StatusCode))
+		span.SetAttributes(attribute.Key("album-service.response.code").Int(resp.StatusCode))
 	}
 }
 
@@ -220,20 +220,20 @@ func processResponseBody(c *gin.Context, span trace.Span, body io.ReadCloser) (i
 	var err = json.NewDecoder(strings.NewReader(jsonBodyString)).Decode(&jsonBody)
 
 	if err != nil {
-		buildMalformedResponseJsonErrorResponse(c, span, jsonBodyString, "error from album-store Malformed JSON returned", http.StatusInternalServerError)
+		buildMalformedResponseJsonErrorResponse(c, span, jsonBodyString, "error from album-service Malformed JSON returned", http.StatusInternalServerError)
 		return jsonBody, true
 	}
 
 	err = body.Close()
 	if err != nil {
-		errorMessage := fmt.Sprintf("error album-store closing response %v", err)
+		errorMessage := fmt.Sprintf("error album-service closing response %v", err)
 		span.AddEvent(errorMessage)
 		span.SetStatus(codes.Error, errorMessage)
 		span.SetAttributes(attribute.Key("http.response.code").Int(http.StatusInternalServerError))
 		c.AbortWithStatusJSON(http.StatusInternalServerError, model.ServerError{Message: errorMessage})
 		return jsonBody, true
 	}
-	span.SetAttributes(attribute.Key("album-store.response.body").String(jsonBodyString))
+	span.SetAttributes(attribute.Key("album-service.response.body").String(jsonBodyString))
 	span.SetAttributes(attribute.Key("proxy-service.response.body").String(jsonBodyString))
 	return jsonBody, false
 }
@@ -266,7 +266,7 @@ func buildMalformedRequestJsonErrorResponse(c *gin.Context, span trace.Span, res
 func buildMalformedResponseJsonErrorResponse(c *gin.Context, span trace.Span, response string, errorMessage string, errorCode int) bool {
 	span.SetStatus(codes.Error, errorMessage)
 	span.AddEvent(errorMessage)
-	span.SetAttributes(attribute.Key("album-store.response.body").String(response))
+	span.SetAttributes(attribute.Key("album-service.response.body").String(response))
 	span.SetAttributes(attribute.Key("proxy-service.response.body").String(fmt.Sprintf(`{"message":"%v"}`, errorMessage)))
 	span.SetAttributes(attribute.Key("proxy-service.response.code").Int(errorCode))
 	c.AbortWithStatusJSON(errorCode, model.ServerError{Message: errorMessage})
@@ -275,7 +275,7 @@ func buildMalformedResponseJsonErrorResponse(c *gin.Context, span trace.Span, re
 
 func handleResponseHasError(c *gin.Context, err error, methodName string, span trace.Span) bool {
 	if err != nil {
-		errorMessage := fmt.Sprintf("error contacting album-store %s %v", methodName, err)
+		errorMessage := fmt.Sprintf("error contacting album-service %s %v", methodName, err)
 		span.AddEvent(errorMessage)
 		span.SetStatus(codes.Error, errorMessage)
 		span.SetAttributes(attribute.Key("proxy-service.response.body").String(fmt.Sprintf(`{"message":"%v"}`, errorMessage)))
@@ -288,7 +288,7 @@ func handleResponseHasError(c *gin.Context, err error, methodName string, span t
 
 func handleResponseCodeHasError(c *gin.Context, responseCode int, methodName string, span trace.Span) bool {
 	if responseCode != http.StatusOK && responseCode != http.StatusCreated {
-		errorMessage := fmt.Sprintf("album-store returned error %s", methodName)
+		errorMessage := fmt.Sprintf("album-service returned error %s", methodName)
 		span.AddEvent(errorMessage)
 		span.SetStatus(codes.Error, errorMessage)
 		span.SetAttributes(attribute.Key("proxy-service.response.code").Int(responseCode))

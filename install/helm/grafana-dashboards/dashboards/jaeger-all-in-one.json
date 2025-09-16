@@ -2820,8 +2820,8 @@
             {
                 "current": {
                     "selected": false,
-                    "text": "album-store",
-                    "value": "album-store"
+                    "text": "album-service",
+                    "value": "album-service"
                 },
                 "datasource": {
                     "type": "prometheus",

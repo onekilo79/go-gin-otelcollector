@@ -700,14 +700,14 @@ dashboardProviders:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/otel-collector
-      - name: "album-store"
+      - name: "album-service"
         orgId: 1
         folder: ""
         type: file
         disableDeletion: false
         editable: true
         options:
-          path: /var/lib/grafana/dashboards/album-store
+          path: /var/lib/grafana/dashboards/album-service
       - name: "proxy-service"
         orgId: 1
         folder: ""
@@ -730,7 +730,7 @@ dashboardsConfigMaps:
   golang: "grafana-dashboards-golang"
   prometheus: "grafana-dashboards-prometheus"
   otel-collector: "grafana-dashboards-otel-collector"
-  album-store: "grafana-dashboards-album-store"
+  album-service: "grafana-dashboards-album-service"
   proxy-service: "grafana-dashboards-proxy-service"
 
 ## Configure grafana dashboard to import

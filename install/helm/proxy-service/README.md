@@ -2,7 +2,7 @@
 
 ![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
-Chart for go Proxy-Service to call go Album-Store
+Chart for go Proxy-Service to call go album-service
 
 ## Values
 
@@ -17,7 +17,7 @@ Chart for go Proxy-Service to call go Album-Store
 | deployment.env[0].name | string | `"OTEL_LOCATION"` |  |
 | deployment.env[0].value | string | `"opentelemetry-collector.observability.svc.cluster.local:4318"` |  |
 | deployment.env[1].name | string | `"ALBUM_STORE_URL"` |  |
-| deployment.env[1].value | string | `"http://album-store.album-store.svc.cluster.local:9080"` |  |
+| deployment.env[1].value | string | `"http://album-service.album-service.svc.cluster.local:9080"` |  |
 | deployment.labels."sidecar.istio.io/inject" | string | `"true"` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |

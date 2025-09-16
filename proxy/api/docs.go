@@ -226,7 +226,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Proxy Service API",
-	Description:      "Simple golang application that proxies calls to Album-Store",
+	Description:      "Simple golang application that proxies calls to album-service",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
